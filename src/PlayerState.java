@@ -12,7 +12,7 @@ public class PlayerState {
 	private List<PlayerAction> actions;
 	
 	private static final int STATE_SIZE_IN_BYTES = 
-			/* Cutting or playing */                                1 + 
+			/* State type: ask, answer or answer point increase*/   3 + 
 			/* 20 (Deck size) bytes representing cards in hand */   Deck.SIZE + 
 			/* 20 (Deck size) bytes representing cards on board */  Deck.SIZE + 
 			/* 20 (Deck size) bytes representing trump card */      Deck.SIZE;
@@ -48,8 +48,10 @@ public class PlayerState {
 		Byte[] state = new Byte[PlayerState.STATE_SIZE_IN_BYTES];
 		int currentIndex = 0;
 		// set state type
-		state[currentIndex] = this.stateType == PlayerStateType.Ask ? (byte)1 : (byte)0;
-		currentIndex++;
+		if (this.stateType == PlayerStateType.ASK) state[currentIndex] = 1;
+		else if (this.stateType == PlayerStateType.ANSWER) state[currentIndex + 1] = 1;
+		else state[currentIndex + 1] = 1;
+		currentIndex += 3;
 		
 		// set hand
 		for (int i = 0; i < this.cardsInHand.size(); i++) {
@@ -73,11 +75,20 @@ public class PlayerState {
 		return this.actions;
 	}
 	
+	public List<Integer> getCardsOnBoard() {
+		return this.cardsOnBoard;
+	}
+	
+	public PlayerStateType getType() {
+		return this.stateType;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("------State of the player-------");
-		builder.append("Type: " + (this.stateType == PlayerStateType.Ask ? "Ask\n" : "Answer\n"));
+		builder.append("Type: " + (this.stateType == PlayerStateType.ASK ? "Ask\n" :
+			(this.stateType == PlayerStateType.ANSWER ? "Answer\n" : "Point increase\n")));
 		builder.append("Cards in hand:");
 		for (int i = 0; i < this.cardsInHand.size(); i++) {
 			if (i > 0) builder.append(",");
@@ -87,6 +98,6 @@ public class PlayerState {
 	}
 	
 	public static enum PlayerStateType {
-		Ask, Answer
+		ASK, ANSWER, POINT_INCREASE
 	}
 }

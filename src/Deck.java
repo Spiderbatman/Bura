@@ -42,12 +42,22 @@ public class Deck {
 	 * @param trump - Trump {@link Suite} represented as {@link Integer} index.
 	 * @return - {@code true} if {@code card} cuts {@code target}. {@code false} otherwise.
 	 */
-	public static boolean cutsIndex(int card, int target, int suite) {
-		return cuts(getCardFromIndex(card), getCardFromIndex(target), getSuiteFromIndex(suite));
+	public static boolean cutsIndex(int card, int target, Suite suite) {
+		return cuts(getCardFromIndex(card), getCardFromIndex(target), suite);
 	}
 	
-	public static boolean cutsIndex(List<Integer> cards, List<Integer> targets, int suite) {
-		List<List<Integer>> permutations = Deck.getPermutations(cards);
+	/**
+	 * Checks if {@link List} of cards represented as integers cuts {@code target} {@link List} of cards. 
+	 * given the trump {@link Suite} represented as {@link Integer}.
+	 * 
+	 * @param cards - {@link Integer} {@link List} representation of {@link Card} checked
+	 * if it cuts {@code targets}.
+	 * @param target - {@link Integer} {@link List} representation of {@link Card}s to cut.
+	 * @param trump - Trump {@link Suite} represented as {@link Integer} index.
+	 * @return - {@code true} if {@code card} cuts {@code target}. {@code false} otherwise.
+	 */
+	public static boolean cutsIndex(List<Integer> cards, List<Integer> targets, Suite suite) {
+		List<List<Integer>> permutations = Deck.getPermutations(new ArrayList<>(cards));
 		for (int i = 0; i < permutations.size(); i++) {
 			boolean cuts = true;
 			for (int j = 0; j < permutations.get(i).size(); j++) {
@@ -166,6 +176,30 @@ public class Deck {
 		public Card(Suite suite, Type type) {
 			this.suite = suite;
 			this.type = type;
+			switch (type) {
+			case A: {
+				this.value = 11;
+				break;
+			}
+			case T: {
+				this.value = 10;
+				break;
+			}
+			case K: {
+				this.value = 4;
+				break;
+			}
+			case Q: {
+				this.value = 3;
+				break;
+			}
+			case J: {
+				this.value = 2;
+				break;
+			}
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + type);
+			}
 		}
 		
 		@Override

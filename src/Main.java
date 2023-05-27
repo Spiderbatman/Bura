@@ -10,7 +10,7 @@ public class Main {
 			System.out.println();
 		}
 		
-		Bura bura = new Bura(new RandomPlayer(), new RandomPlayer());
+		Bura bura = new Bura(new RandomPlayer("PLAYER_A"), new RandomPlayer("PLAYER_B"));
 		bura.play();
 	}
 }

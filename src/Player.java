@@ -3,4 +3,6 @@
  */
 public interface Player {
 	public PlayerAction getAction(PlayerState state);
+	
+	public String getName();
 }
